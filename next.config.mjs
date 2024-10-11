@@ -17,6 +17,9 @@ const nextConfig = {
       {
         hostname: "media0.giphy.com",
       },
+      {
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };

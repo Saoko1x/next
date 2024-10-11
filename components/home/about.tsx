@@ -1,7 +1,32 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function AboutUs() {
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    const fetchRandomImage = async () => {
+      try {
+        const response = await fetch(
+          `https://api.unsplash.com/photos/random?client_id=8_NZFlEANzFsg0bpZDHqBzfkcw9soNyc9PzWSrspHUU`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch image");
+        }
+        const data = await response.json();
+        setImageUrl(data.urls.regular);
+      } catch (error) {
+        console.error("Error fetching image:", error);
+        // Fallback to a placeholder image if the fetch fails
+        setImageUrl("/placeholder.svg?height=400&width=600");
+      }
+    };
+
+    fetchRandomImage();
+  }, []);
+
   return (
     <section className="py-16 bg-gray-50" id="about">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,13 +94,16 @@ export default function AboutUs() {
             <Button variant="default">Leer más</Button>
           </div>
           <div className="mt-10 md:mt-0">
-            <Image
-              src="/placeholder.svg?height=400&width=600"
-              alt="Nuestro equipo trabajando"
-              className="rounded-lg shadow-lg"
-              width={600}
-              height={400}
-            />
+            {imageUrl && (
+              <Image
+                src={imageUrl}
+                alt="Nuestro equipo trabajando"
+                className="rounded-lg shadow-lg"
+                width={600}
+                height={400}
+                layout="responsive"
+              />
+            )}
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@ export default function SelectedGifPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">GIF Seleccionado</h1>
         <Link href="/listado">
-          <Button>Volver al listado</Button>
+          <Button>Listado</Button>
         </Link>
       </div>
       <Suspense fallback={<div>Loading...</div>}>

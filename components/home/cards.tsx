@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 type ImageCard = {
   id: number;
@@ -57,56 +58,33 @@ function ImageCard({ card }: { card: ImageCard }) {
 }
 
 export default function Home() {
-  const cards = [
-    {
-      id: 1,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 2,
-      title: "Beach Sunset",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 3,
-      title: "City Skyline",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 4,
-      title: "Forest Trail",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 5,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 6,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 7,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 8,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-  ];
+  const [cards, setCards] = useState<ImageCard[]>([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(
+          `https://api.unsplash.com/photos/random?count=8&client_id=8_NZFlEANzFsg0bpZDHqBzfkcw9soNyc9PzWSrspHUU`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch images");
+        }
+        const data = await response.json();
+        setCards(
+          data.map((item: any, index: number) => ({
+            id: index + 1,
+            title: item.alt_description || `Image ${index + 1}`,
+            imageUrl: item.urls.regular,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching images:", error);
+        // You might want to set some error state here
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8" id="cards">

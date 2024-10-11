@@ -17,6 +17,9 @@ export default function Home() {
     <main>
       <FloatingNav navItems={navItems} />
       <Welcome />
+      <h1 className="flex text-center justify-center ">
+        Todas las imagenes vienen de la API de Unsplash
+      </h1>
       <Carousel />
       <Cards />
       <About />

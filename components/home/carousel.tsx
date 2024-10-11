@@ -3,35 +3,29 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Carousel() {
-  const cards = [
-    {
-      id: 1,
-      title: "Mountain View",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 2,
-      title: "Beach Sunset",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 3,
-      title: "City Skyline",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-    {
-      id: 4,
-      title: "Forest Trail",
-      imageUrl:
-        "https://utfs.io/f/pypyrj2zEPRNfcTLLGyC6s1S0R75wL3lAVCbqKGjiPoQx9zg",
-    },
-  ];
+  const [cards, setCards] = useState([]);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const response = await fetch(
+        `https://api.unsplash.com/photos/random?orientation=landscape&count=4&client_id=8_NZFlEANzFsg0bpZDHqBzfkcw9soNyc9PzWSrspHUU`
+      );
+      const data = await response.json();
+      setCards(
+        data.map((item: any, index: number) => ({
+          id: index + 1,
+          title: item.alt_description || `Image ${index + 1}`,
+          imageUrl: item.urls.regular,
+        }))
+      );
+    };
+
+    fetchImages();
+  }, []);
 
   const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
   const scrollNext = () => emblaApi && emblaApi.scrollNext();
@@ -39,7 +33,7 @@ export default function Carousel() {
     <div className="relative" id="carousel">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {cards.map((item) => (
+          {cards.map((item: any) => (
             <div key={item.id} className="flex-[0_0_100%] min-w-0 relative p-2">
               <Image
                 src={item.imageUrl}
@@ -47,6 +41,7 @@ export default function Carousel() {
                 className="w-full h-[400px] object-cover rounded-lg"
                 width={400}
                 height={300}
+                objectFit="contain"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 rounded-b-lg">
                 <h3 className="text-xl font-bold">{item.title}</h3>
