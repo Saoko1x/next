@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Nav from "@/components/nav";
 
 // Asegúrate de reemplazar esto con tu propia API key de Giphy
 const GIPHY_API_KEY = "HM1koDVmNfOizeRYAcMBgvYs0pc213Wp";
@@ -72,34 +73,37 @@ export default function GifsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Explorador de GIFs</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        {displayedGifs.map((gif) => (
-          <div
-            key={gif.id}
-            className="cursor-pointer"
-            onClick={() => handleGifClick(gif)}
-          >
-            <Image
-              src={gif.images.fixed_height.url}
-              alt={gif.title}
-              width={200}
-              height={200}
-              className="rounded-lg"
-              unoptimized
-            />
-          </div>
-        ))}
+    <>
+      <Nav />
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Explorador de GIFs</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+          {displayedGifs.map((gif) => (
+            <div
+              key={gif.id}
+              className="cursor-pointer"
+              onClick={() => handleGifClick(gif)}
+            >
+              <Image
+                src={gif.images.fixed_height.url}
+                alt={gif.title}
+                width={200}
+                height={200}
+                className="rounded-lg"
+                unoptimized
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between">
+          <Button onClick={handlePrevPage} disabled={offset === 0}>
+            Anterior
+          </Button>
+          <Button onClick={handleNextPage} disabled={offset >= 7}>
+            Siguiente
+          </Button>
+        </div>
       </div>
-      <div className="flex justify-between">
-        <Button onClick={handlePrevPage} disabled={offset === 0}>
-          Anterior
-        </Button>
-        <Button onClick={handleNextPage} disabled={offset >= 7}>
-          Siguiente
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }
