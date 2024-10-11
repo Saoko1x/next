@@ -9,18 +9,30 @@ export default function AboutUs() {
   useEffect(() => {
     const fetchRandomImage = async () => {
       try {
+        // Verificar si ya hay una imagen en el localStorage
+        const storedImage = localStorage.getItem("aboutUsImage");
+        if (storedImage) {
+          setImageUrl(storedImage);
+          return;
+        }
+
+        // Si no hay imagen almacenada, hacer la llamada a la API
         const response = await fetch(
-          `https://api.unsplash.com/photos/random?client_id=8_NZFlEANzFsg0bpZDHqBzfkcw9soNyc9PzWSrspHUU`
+          `https://api.unsplash.com/photos/random?client_id=2QuecJhFV8ybA6XYOAvwiRoKhYQnhimrq-1ctxWQwXc`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch image");
         }
         const data = await response.json();
-        setImageUrl(data.urls.regular);
+        const newImageUrl = data.urls.regular;
+
+        // Guardar la imagen en localStorage
+        localStorage.setItem("aboutUsImage", newImageUrl);
+        setImageUrl(newImageUrl);
       } catch (error) {
         console.error("Error fetching image:", error);
         // Fallback to a placeholder image if the fetch fails
-        setImageUrl("/placeholder.svg?height=400&width=600");
+        setImageUrl("");
       }
     };
 

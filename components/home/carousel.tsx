@@ -5,23 +5,47 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+interface ImageCard {
+  id: number;
+  title: string;
+  imageUrl: string;
+}
+
 export default function Carousel() {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<ImageCard[]>([]);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   useEffect(() => {
     const fetchImages = async () => {
-      const response = await fetch(
-        `https://api.unsplash.com/photos/random?orientation=landscape&count=4&client_id=8_NZFlEANzFsg0bpZDHqBzfkcw9soNyc9PzWSrspHUU`
-      );
-      const data = await response.json();
-      setCards(
-        data.map((item: any, index: number) => ({
+      try {
+        // Verificar si ya hay imágenes en el localStorage
+        const storedImages = localStorage.getItem("carouselImages");
+        if (storedImages) {
+          setCards(JSON.parse(storedImages));
+          return;
+        }
+
+        // Si no hay imágenes almacenadas, hacer la llamada a la API
+        const response = await fetch(
+          `https://api.unsplash.com/photos/random?orientation=landscape&count=4&client_id=2QuecJhFV8ybA6XYOAvwiRoKhYQnhimrq-1ctxWQwXc`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch images");
+        }
+        const data = await response.json();
+        const newCards = data.map((item: any, index: number) => ({
           id: index + 1,
           title: item.alt_description || `Image ${index + 1}`,
           imageUrl: item.urls.regular,
-        }))
-      );
+        }));
+
+        // Guardar las imágenes en localStorage
+        localStorage.setItem("carouselImages", JSON.stringify(newCards));
+        setCards(newCards);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+        // You might want to set some error state here
+      }
     };
 
     fetchImages();

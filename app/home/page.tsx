@@ -12,6 +12,7 @@ export default function Home() {
     { name: "Propiedades", link: "#cards" },
     { name: "Nosotros", link: "#about" },
     { name: "GIF", link: "#listed-button" },
+    { name: "Skills", link: "/skills" },
   ];
   return (
     <main>
