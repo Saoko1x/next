@@ -14,6 +14,7 @@ export default function Nav() {
     { name: "GIF", link: "/home#listed-button" },
     { name: "Listado", link: "/listado" },
     { name: "Skills", link: "/skills" },
+    { name: "Github repo", link: "https://github.com/Saoko1x/next" },
   ];
 
   const handleLogout = () => {
